@@ -1,0 +1,41 @@
+<template>
+    <lightning-card title="Support Tickets Dashboard">
+        <template if:true={tickets}>
+            <div class="slds-grid slds-wrap">
+                <template for:each={tickets} for:item="ticket">
+                    <div key={ticket.Id}
+                        data-id={ticket.Id}
+                        onclick={navigateToRecord}
+                        class="slds-col slds-size_1-of-2 slds-p-around_small {ticket.styleClass}"
+                        style="cursor: pointer;">
+                            <lightning-card>
+                                <lightning-icon icon-name="utility:flag" size="x-small" class="slds-m-right_xx-small"></lightning-icon>
+                                <span slot="title">{ticket.Subject__c}</span>
+                                <lightning-badge class={ticket.styleClass}>{ticket.Priority__c}</lightning-badge>
+                                <lightning-record-edit-form object-api-name="Support_Ticket__c"
+                                                            record-id={ticket.Id}
+                                                            onsuccess={handleSuccess}>
+                                    <div class="slds-p-horizontal_small">
+                                        <p><strong>Priority:</strong> {ticket.Priority__c}</p>
+                                        <lightning-input-field field-name="Status__c"></lightning-input-field>
+                                        <lightning-button type="submit" label="Update" class="slds-m-top_small"></lightning-button>
+                                    </div>
+                                </lightning-record-edit-form>
+                            </lightning-card>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </lightning-card>
+    <div class="slds-p-around_medium">
+        <template if:false={chartRendered}>
+            <div class="slds-text-color_weak">Grafik yükleniyor...</div>
+        </template>
+        <template if:true={chartRendered}>
+            <h3>Status Distribution</h3>
+            <lightning-icon icon-name="utility:chart" size="small" class="slds-m-right_xx-small"></lightning-icon>
+            <canvas class="status-chart" lwc:dom="manual"></canvas>
+        </template>
+    </div>
+
+</template>
